@@ -38,7 +38,7 @@ x=[i for i in range(100)]
 cleanData = initLine(x)
 
 # apply noise to data
-mu, sigma = 0,1000
+mu, sigma = 0,100 # works with even very large sigma
 y_data = [i + random.normal(mu,sigma) for i in cleanData]
 
 # plt.figure()
@@ -56,6 +56,8 @@ curr_iter = 0
 cost_threshold = 0.01 # end when Delta_cost/cost < threshold
 alpha = 0.01 # learning rate
 
+cost_hist =[]
+
 prev_cost = 0
 new_cost, m_deriv, b_deriv = cost(h(x), y_data, x)
 print(cost(h(x),y_data,x))
@@ -68,6 +70,7 @@ while abs(new_cost-prev_cost)/new_cost > cost_threshold:
     bg = bg - alpha*b_deriv
     h = line(mg,bg)
     new_cost, m_deriv, b_deriv = cost(h(x), y_data, x)
+    cost_hist.append(new_cost)
     if new_cost > prev_cost:
         alpha = alpha*0.01
     print(cost(h(x),y_data,x))
@@ -76,4 +79,8 @@ plt.figure()
 plt.plot(x, h(x), 'k')
 plt.plot(x, initLine(x), '--', color='r')
 plt.scatter(x, y_data)
+plt.figure()
+plt.plot(cost_hist)
+plt.xlabel('iterations')
+plt.ylabel('J')
 plt.show()
