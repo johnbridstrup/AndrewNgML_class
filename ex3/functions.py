@@ -1,6 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+def sigmoid(z):
+    return 1/(1+np.exp(-z))
+
 def display(X, indices=None, figsize=(10, 10)):
     if X.ndim == 1:
         n = X.size
@@ -23,10 +26,9 @@ def display(X, indices=None, figsize=(10, 10)):
     fig.subplots_adjust(wspace=0.025, hspace=0.025)
     
     ax_array = [ax_array] if m == 1 else ax_array.ravel()
-    print(ax_array)
+    # print(ax_array)
 
     for i, ax in enumerate(ax_array):
-        print(ax)
         ax.imshow(X[show_indices[i]].reshape(side_width, side_width, order='F'),
                   cmap='Greys', extent=[0, 1, 0, 1])
         ax.axis('off')
@@ -51,4 +53,28 @@ def display_single(X, index=0):
             cmap='Greys', extent=[0,1,0,1])
     plt.axis('off')
     
+def lrCostFunction(theta, X, y, lamb):
+    if y.dtype == bool:
+        y = y.astype(int)
+    m = len(y)
+    thetaX = np.dot(X, theta)
+    sig = sigmoid(thetaX)
+    one_min_y = np.subtract(1,y)
+    one_min_sig = np.subtract(1,sig)
+    J = -(1/m)*(np.dot(y,np.log(sig))+(np.dot(one_min_y,np.log(one_min_sig))))
+    reg = (lamb/(2*m))*np.dot(theta[1:],theta[1:])
+    J = J + reg
 
+    return J
+
+def lrGradFunction(theta, X, y, lamb):
+    if y.dtype == bool:
+        y = y.astype(int)
+    m = len(y)
+    thetaX = np.dot(X, theta)
+    sig = sigmoid(thetaX)
+    sig_min_y = np.subtract(sig, y)
+    grad = np.dot((1/m), np.dot(sig_min_y, X))
+    grad_reg = np.dot(lamb/m, theta[1:])
+    grad = np.add(grad, np.append([0], grad_reg))
+    return grad
