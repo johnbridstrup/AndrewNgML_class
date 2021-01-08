@@ -78,3 +78,22 @@ def lrGradFunction(theta, X, y, lamb):
     grad_reg = np.dot(lamb/m, theta[1:])
     grad = np.add(grad, np.append([0], grad_reg))
     return grad
+
+def NNpredict(theta1, theta2, X):
+    # X can be 1D or 2D array
+    if X.ndim == 1:
+        one_d = True
+        X = np.expand_dims(X, axis=0)
+    elif X.ndim > 2 or X.ndim==0:
+        raise IndexError('Must be 1D or 2D')
+
+    # I assume 1s have already been added initially
+    z1 = np.matmul(X, theta1.T)
+    layer2 = sigmoid(z1)
+    add_ones = np.ones((X.shape[0],1))
+    layer2 = np.hstack((add_ones, layer2))
+    z2 = np.matmul(layer2, theta2.T)
+    layer3 = sigmoid(z2)
+    
+    prediction = [np.where(arr == np.amax(arr))[0][0] for arr in layer3]
+    return prediction
