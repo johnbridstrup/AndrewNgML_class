@@ -11,6 +11,8 @@ pylint = "*"
 matplotlib = "*"
 pandas = "*"
 sklearn = "*"
+opencv-python = "*"
+jupyter = "*"
 
 [requires]
 python_version = "3.8"

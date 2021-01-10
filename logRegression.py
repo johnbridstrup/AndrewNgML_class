@@ -23,10 +23,14 @@ def sigmoid(z):
     return 1/(1 + np.exp(-z))
 
 def guesses(theta, x):
-    features = x.keys()
     h = []
-    for index, row in x.iterrows():
-        h.append(sigmoid(sum([theta[i]*row[feature] for i,feature in enumerate(features)])))
+    try:
+        features = x.keys()
+        for _, row in x.iterrows():
+            h.append(sigmoid(sum([theta[i]*row[feature] for i,feature in enumerate(features)])))
+    except:
+        for row in x:
+            h.append(sigmoid(sum([theta[i]*xx for i,xx in enumerate(row)])))
     return h
 
 def cost(y, h):
