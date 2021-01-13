@@ -71,3 +71,14 @@ def plotFit_ax(min_x, max_x, mu, sigma, theta, p, ax):
 
     X_poly = np.concatenate([np.ones((x.shape[0], 1)), X_poly], axis=1)
     ax.plot(x, np.dot(X_poly, theta), '--', lw=2)
+
+def validationCurve(X, y, Xval, yval):
+    lamb_vec = [0.01*2.0**(i) for i in range(11)]
+    lamb_vec.insert(0,0.0)
+    error_train = np.zeros(len(lamb_vec))
+    error_val = np.zeros(len(lamb_vec))
+    for i, lam in enumerate(lamb_vec):
+        theta = trainLinReg(X, y, lam)
+        error_train[i], _ = linearRegCost(theta['x'], X, y, 0)
+        error_val[i], _ = linearRegCost(theta['x'], Xval, yval, 0)
+    return lamb_vec, error_train, error_val
