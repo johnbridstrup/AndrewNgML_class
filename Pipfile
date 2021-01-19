@@ -13,6 +13,7 @@ pandas = "*"
 sklearn = "*"
 opencv-python = "*"
 jupyter = "*"
+mlxtend = "*"
 
 [requires]
 python_version = "3.8"
