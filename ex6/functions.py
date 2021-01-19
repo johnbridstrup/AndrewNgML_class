@@ -56,13 +56,13 @@ def displayData(X,y, grid=False, clf=None):
 
     
 
-def svmTrain(X, y, C, kernel='linear'):
+def svmTrain(X, y, C, kernel='linear', gamma=1.0):
     y = y.astype(int)
 
     # They want me to use a simplified model they wrote themselves
     # Im just gonna use sklearn SVM packages...
 
-    clf = svm.SVC(kernel=kernel, C = C)
+    clf = svm.SVC(kernel=kernel, C = C, gamma=gamma)
     clf.fit(X,y)
     return clf
 
