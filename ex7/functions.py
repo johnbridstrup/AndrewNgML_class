@@ -1,4 +1,5 @@
 import numpy as np
+from numpy.linalg import svd
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib as mpl
@@ -60,3 +61,49 @@ def plotkMeans(X, fit):
         plt.plot(cluster_center[0], cluster_center[1], 'o', markerfacecolor=col,
             markeredgecolor='k', markersize=6)
 
+def featureNormalize(X):
+    mu = np.mean(X, axis=0)
+    X_norm = X - mu
+
+    sigma = np.std(X_norm, axis=0, ddof=1)
+    X_norm /= sigma
+    return X_norm, mu, sigma
+
+def pca(X):
+    """
+    Principle component analysis
+    implements svd from numpy.linalg
+    --------------------------------------
+    Parameters:
+    X: array-like dataset, dimensions mxn
+
+    Returns:
+    U: array-like eigen vectors of X
+    S: Diagonal array of eigen values
+    """
+    m,_ = X.shape
+    # Computer covariance
+    covar = (1/m)*(X.T.dot(X))
+
+    U, S, _ = svd(covar)
+
+    return U, S
+
+def projectData(X, U, K):
+    """
+    Project data after principle component analysis
+    ---------------------------------------
+    Parameters:
+    X: Array of data
+    U: Svd of covariance matrix of X
+    K: number of principle components to use
+
+    Returns:
+    Z: Data projected onto the K largest eigenvectors
+    """
+    Z = np.dot(X, U[:,:K])
+    return Z
+
+def recoverData(Z, U, K):
+    X_rec = Z.dot(U[:,:K].T)
+    return X_rec
